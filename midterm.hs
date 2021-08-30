@@ -59,7 +59,7 @@ import Data.List
 -------------------------------------------------------------------------
     Для properDivisors1 будем использовать List comprehension 
     https://wiki.haskell.org/List_comprehension Также внутри 
-    helper используется механизм сопоставления шаблону оператор 
+    helper используется механизм сопоставления шаблону, оператор 
     аппликации '$' нулевого приоритета и оператор свертки '.'
 --------------------------------------------------------------------------}
 
@@ -121,12 +121,37 @@ abbrev input = helper . words $ input
         lastWord = last list
         firstWords = init list
         makeWordsShort :: [String] -> [String]
-        makeWordsShort = map (\word ->[head word] ++ ".")
+        makeWordsShort = map (\word -> [head word] ++ ".")
 
 -- 3. См. файл midterm-problem3.pdf в source.unn.ru.
-oddAlterSign = [k | n <- [1,5..], k <- [n, -n-2]]
-series = map ((/) 1) oddAlterSign
-partialSummSeries = scanl1 (+) series
+
+makeAlterSigned :: [Double] -> [Double]
+makeAlterSigned = zipWith (*) $ cycle [1, -1]
+
+oddSeries :: [Double]
+oddSeries = [1,3..]
+
+anSeries :: [Double]
+anSeries = map ((/) 1) oddSeries
+
+anAlterSign = makeAlterSigned anSeries
+
+approxPi :: [Double]
+approxPi = map ((*) 4) partSumPi
+  where
+    partSumPi = (scanl1 (+) anSeries)
+
+delta :: [Double] -> [Double]
+delta (a:tail@(b:xs)) = (b - a):(delta tail)
+
+reReRe :: [Double] -> [Double]
+reReRe an = takeFirst diffComposition
+  where
+    diffComposition = iterate (\a -> delta a) an
+    takeFirst (x:xs) = (x!!0):(takeFirst xs)
+
+euler :: [Double] -> [Double]
+euler an = unfoldr (\(i,(x:xs)) -> Just (x / i, (i * 2, xs))) (2, reReRe an)
 
 
 -- 4. Сделайте упражнение 6 из домашнего задания в lec07.hs

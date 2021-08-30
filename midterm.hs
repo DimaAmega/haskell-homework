@@ -139,10 +139,11 @@ anAlterSign = makeAlterSigned anSeries
 approxPi :: [Double]
 approxPi = map ((*) 4) partSumPi
   where
-    partSumPi = (scanl1 (+) anSeries)
+    partSumPi = (scanl1 (+) anAlterSign)
 
 delta :: [Double] -> [Double]
-delta (a:tail@(b:xs)) = (b - a):(delta tail)
+delta an = zipWith (-) (tail an) an
+
 
 reReRe :: [Double] -> [Double]
 reReRe an = takeFirst diffComposition

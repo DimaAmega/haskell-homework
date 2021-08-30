@@ -2,7 +2,3 @@ take 5 anSeries
 take 5 (delta anSeries)
 take 5 (delta (delta anSeries))
 take 5 (delta (delta (delta anSeries)))
-"------------------------------------------"
-take 10 (reReRe anSeries)
-"------------------------------------------"
-take 10 (euler anSeries)

@@ -143,12 +143,12 @@ delta :: [Double] -> [Double]
 delta an = zipWith (-) (tail an) an
 
 firstDiffSeries :: [Double] -> [Double]
-firstDiffSeries = takeFirst . diffComposition
+firstDiffSeries = takeFirsts . diffComposition
   where
     diffComposition :: [Double] -> [[Double]]
     diffComposition = iterate delta
-    takeFirst :: [[Double]] -> [Double]
-    takeFirst = map head
+    takeFirsts :: [[Double]] -> [Double]
+    takeFirsts = map head
 
 euler :: [Double] -> [Double]
 euler an = unfoldr func pair

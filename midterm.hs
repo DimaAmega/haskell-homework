@@ -128,16 +128,17 @@ abbrev input = helper . words $ input
 makeAlterSigned :: [Double] -> [Double]
 makeAlterSigned = zipWith (*) $ cycle [1, -1]
 
-oddSeries :: [Double]
-oddSeries = [1,3..]
+oddSequence :: [Double]
+oddSequence = [1,3..]
 
-anSeries :: [Double]
-anSeries = map ((/) 1) oddSeries
+anSequence :: [Double]
+anSequence = map ((/) 1) oddSequence
 
 approxPi :: [Double]
 approxPi = map ((*) 4) partSumPi
   where
-    partSumPi = scanl1 (+) (makeAlterSigned anSeries)
+    partSumPi = scanl1 (+) sequence
+    sequence = makeAlterSigned anSequence
 
 delta :: [Double] -> [Double]
 delta an = zipWith (-) (tail an) an
@@ -159,7 +160,8 @@ euler an = unfoldr func pair
 fastApproxPi :: [Double]
 fastApproxPi = map ((*) 4) partSumPi
   where
-    partSumPi = scanl1 (+) (makeAlterSigned . euler $ anSeries)
+    partSumPi = scanl1 (+) sequence
+    sequence = makeAlterSigned . euler $ anSequence
 
 -- 4. Сделайте упражнение 6 из домашнего задания в lec07.hs
 -- (написать функцию applyDistr :: Exp -> Exp). Включать

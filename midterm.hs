@@ -151,9 +151,10 @@ firstDiffSeries = takeFirst . diffComposition
     takeFirst = map head
 
 euler :: [Double] -> [Double]
-euler an = unfoldr func (1, firstDiffSeries an)
+euler an = unfoldr func pair
   where
-    func (den,(fd:fdx)) = Just (den / 2 * fd, (den / 2, fdx))
+    func (den, (fd:fdx)) = Just (den / 2 * fd, (den / 2, fdx))
+    pair = (1, firstDiffSeries an)
 
 fastApproxPi :: [Double]
 fastApproxPi = map ((*) 4) partSumPi

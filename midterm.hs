@@ -134,26 +134,31 @@ oddSeries = [1,3..]
 anSeries :: [Double]
 anSeries = map ((/) 1) oddSeries
 
-anAlterSign = makeAlterSigned anSeries
-
 approxPi :: [Double]
 approxPi = map ((*) 4) partSumPi
   where
-    partSumPi = (scanl1 (+) anAlterSign)
+    partSumPi = scanl1 (+) (makeAlterSigned anSeries)
 
 delta :: [Double] -> [Double]
 delta an = zipWith (-) (tail an) an
 
-
-reReRe :: [Double] -> [Double]
-reReRe an = takeFirst diffComposition
+firstDiffSeries :: [Double] -> [Double]
+firstDiffSeries = takeFirst . diffComposition
   where
-    diffComposition = iterate (\a -> delta a) an
-    takeFirst (x:xs) = (x!!0):(takeFirst xs)
+    diffComposition :: [Double] -> [[Double]]
+    diffComposition = iterate delta
+    takeFirst :: [[Double]] -> [Double]
+    takeFirst = map head
 
 euler :: [Double] -> [Double]
-euler an = unfoldr (\(i,(x:xs)) -> Just (x / i, (i * 2, xs))) (2, reReRe an)
+euler an = unfoldr func (1, firstDiffSeries an)
+  where
+    func (den,(fd:fdx)) = Just (den / 2 * fd, (den / 2, fdx))
 
+fastApproxPi :: [Double]
+fastApproxPi = map ((*) 4) partSumPi
+  where
+    partSumPi = scanl1 (+) (makeAlterSigned . euler $ anSeries)
 
 -- 4. Сделайте упражнение 6 из домашнего задания в lec07.hs
 -- (написать функцию applyDistr :: Exp -> Exp). Включать

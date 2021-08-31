@@ -1,4 +1,2 @@
-take 5 anSeries
-take 5 (delta anSeries)
-take 5 (delta (delta anSeries))
-take 5 (delta (delta (delta anSeries)))
+take 10 approxPi
+take 20 fastApproxPi

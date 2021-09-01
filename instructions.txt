@@ -1,2 +1,3 @@
-take 20 approxPi
-take 20 fastApproxPi
+hello "World"
+"Give me 10 natural numbers"
+take 10 naturals

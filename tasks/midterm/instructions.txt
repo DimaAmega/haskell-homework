@@ -1,0 +1,2 @@
+take 20 approxPi
+take 20 fastApproxPi

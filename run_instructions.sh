@@ -10,5 +10,6 @@ if [ -f $1 ]; then
     -e '$ d'
     exit 0
 fi
+
 echo "no such file $1"
 exit 1

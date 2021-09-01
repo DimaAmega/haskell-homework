@@ -11,5 +11,5 @@ if [ -f $1 ]; then
     exit 0
 fi
 
-echo "no such file $1"
+echo "no such file $2"
 exit 1

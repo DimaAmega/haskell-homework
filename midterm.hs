@@ -125,21 +125,6 @@ abbrev input = helper . words $ input
 
 -- 3. См. файл midterm-problem3.pdf в source.unn.ru.
 
-makeAlterSigned :: [Double] -> [Double]
-makeAlterSigned = zipWith (*) $ cycle [1, -1]
-
-oddSequence :: [Double]
-oddSequence = [1,3..]
-
-anSequence :: [Double]
-anSequence = map ((/) 1) oddSequence
-
-approxPi :: [Double]
-approxPi = map ((*) 4) partSumPi
-  where
-    partSumPi = scanl1 (+) sequence
-    sequence = makeAlterSigned anSequence
-
 delta :: [Double] -> [Double]
 delta an = zipWith (-) (tail an) an
 
@@ -156,6 +141,21 @@ euler an = unfoldr func pair
   where
     func (den, (fd:fdx)) = Just (den / 2 * fd, (den / 2, fdx))
     pair = (1, firstDiffSeries an)
+
+makeAlterSigned :: [Double] -> [Double]
+makeAlterSigned = zipWith (*) $ cycle [1, -1]
+
+oddSequence :: [Double]
+oddSequence = [1,3..]
+
+anSequence :: [Double]
+anSequence = map ((/) 1) oddSequence
+
+approxPi :: [Double]
+approxPi = map ((*) 4) partSumPi
+  where
+    partSumPi = scanl1 (+) sequence
+    sequence = makeAlterSigned anSequence
 
 fastApproxPi :: [Double]
 fastApproxPi = map ((*) 4) partSumPi

@@ -68,7 +68,11 @@ form2 = C Iff [C Xor [C And [V (Var 'x'), V (Var 'y')], C Neg [V (Var 'z')]],
 -- работают в предположении, что формула составлена правильно.
 
 correctArity :: Formula a -> Bool
-correctArity = undefined
+correctArity (C op args) = and (isCorrecrArityNow:otherChecks)
+  where
+    isCorrecrArityNow = arity op == length args
+    otherChecks = map correctArity args
+correctArity _ = True
 
 -------------------------------------------------
 -- 2. Текстовое представление формул

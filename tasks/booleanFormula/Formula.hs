@@ -90,7 +90,13 @@ arityError = error "Arity other than 0, 1 or 2"
 -- константы (то есть нульарные функции) окружать скобками не нужно.
 
 fullParen :: Show a => Formula a -> ShowS
-fullParen = undefined
+fullParen (V a) = shows a
+fullParen (C op [arg])
+  | arity op < 1 = opText op . fullParen arg
+  | otherwise = showChar '(' . opText op . fullParen arg . showChar ')'
+fullParen (C op [left, right]) = 
+  showChar '(' . fullParen left . opText op . fullParen right . showChar ')'
+fullParen _ = arityError
 
 -- Вариант, учитывающий приоритет и ассоциативность операций
 

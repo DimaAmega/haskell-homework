@@ -1,1 +1,2 @@
 fullParen form1 ""
+showFormula noOp True form1 ""

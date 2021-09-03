@@ -131,24 +131,19 @@ fullParen _ = arityError
 --   аргументом внешнего оператора
 -- Третий аргумент: формула, которую нужно напечатать
 
--- ( ... opInt ... ) opExt ...
+-- [( ... opInt ... ) opExt ( ... opInt ... )]
 
 showFormula :: Show a => Op -> Bool -> Formula a -> ShowS
-showFormula = undefined
--- showFormula opExt isLeft f
---   | arity opExt == 0 = opText opExt . helper f
---   | otherwise = undefined
---   where
---     helper (V a) = shows a
---     helper (C op [arg]) = showFormula op True arg
---     helper (C op [left, right]) = showFormula op True left . showFormula op False right
-
+showFormula opExt isLeft (V a) = shows a
+showFormula opExt isLeft (C opInt [arg]) = opText opInt . showFormula opInt True arg
+showFormula opExt isLeft (C opInt [left, right]) = 
+  showFormula opInt True left . opText opInt . showFormula opInt False right
 -- После написания fullParen или showFormula раскоментируйте соответствующий
 -- вариант объявления членства типа Formula в классе Show
 
 instance Show a => Show (Formula a) where
---  show f = fullParen f ""
-  show f = showFormula noOp True f ""
+ show f = fullParen f ""
+  -- show f = showFormula noOp True f ""
 
 -- Например, примеры формул form1 и form2 выше должны печататься так,
 -- как они записаны в комментариях перед определением.

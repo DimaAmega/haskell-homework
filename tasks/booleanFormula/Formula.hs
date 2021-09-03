@@ -89,13 +89,15 @@ arityError = error "Arity other than 0, 1 or 2"
 -- положительным числом аргументов окружена скобками. Переменные и
 -- константы (то есть нульарные функции) окружать скобками не нужно.
 
+wrapOnQuotes :: ShowS -> ShowS
+wrapOnQuotes input = showChar '(' . input . showChar ')'
+
 fullParen :: Show a => Formula a -> ShowS
 fullParen (V a) = shows a
 fullParen (C op [arg])
   | arity op < 1 = opText op . fullParen arg
-  | otherwise = showChar '(' . opText op . fullParen arg . showChar ')'
-fullParen (C op [left, right]) = 
-  showChar '(' . fullParen left . opText op . fullParen right . showChar ')'
+  | otherwise = wrapOnQuotes $ opText op . fullParen arg
+fullParen (C op [left, right]) = wrapOnQuotes $ fullParen left . opText op . fullParen right
 fullParen _ = arityError
 
 -- Вариант, учитывающий приоритет и ассоциативность операций
@@ -129,8 +131,17 @@ fullParen _ = arityError
 --   аргументом внешнего оператора
 -- Третий аргумент: формула, которую нужно напечатать
 
+-- ( ... opInt ... ) opExt ...
+
 showFormula :: Show a => Op -> Bool -> Formula a -> ShowS
 showFormula = undefined
+-- showFormula opExt isLeft f
+--   | arity opExt == 0 = opText opExt . helper f
+--   | otherwise = undefined
+--   where
+--     helper (V a) = shows a
+--     helper (C op [arg]) = showFormula op True arg
+--     helper (C op [left, right]) = showFormula op True left . showFormula op False right
 
 -- После написания fullParen или showFormula раскоментируйте соответствующий
 -- вариант объявления членства типа Formula в классе Show

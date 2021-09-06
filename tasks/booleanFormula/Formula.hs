@@ -40,7 +40,7 @@ data Formula a = V a | C Op [Formula a]
 -- Чтобы формула печаталась без кавычек, создадим новый тип и
 -- определим его членство в Show по-другому.
 
-newtype Var = Var { varName :: Char }
+newtype Var = Var { varName :: Char } deriving Eq
 
 instance Show Var where
   show (Var c) = [c]
@@ -179,15 +179,19 @@ type Environment = [Domain]
 -- с данным номером в окружении.
 
 lookupVar :: Environment -> Int -> Domain
-lookupVar = undefined
+lookupVar e index = e !! index
 
 -- Задание 5. Напишите функцию eval, возвращающую значение формулы
 -- типа Formula Int в окружении. Значение операций определяются функцией
 -- evalOp, определенной в модуле BooleanSyntax.
 
+-- V a | C Op [Formula a]
 eval :: Environment -> Formula Int -> Domain
-eval = undefined
+eval e (V index) = lookupVar e index
+eval e (C op args) = evalOp op $ map (\arg -> eval e arg) args
 
+form4 :: Formula Int
+form4 = C And [V 0, C Or [V 1, V 2]]
 -------------------------------------------------
 -- 4. Компиляция Formula a в Formula Int
 -------------------------------------------------
@@ -208,7 +212,10 @@ eval = undefined
 -- не более одного раза. Можно использовать функцию nub из Data.List.
 
 collectVars1 :: Eq a => Formula a -> [a]
-collectVars1 = undefined
+collectVars1 = Data.List.nub . helper
+  where
+    helper (V a) = [a]
+    helper (C _ args) = foldl (++) [] $ map helper args
 
 -- Задание 7. Напишите функцию varsToInt, которая принимает список
 -- переменных и формулу и возвращает формулу типа Formula Int, где

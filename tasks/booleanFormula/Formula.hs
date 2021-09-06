@@ -1,6 +1,7 @@
 module Formula where
 
 import Data.List
+import Data.Maybe
 import Data.Semigroup
 import BooleanSyntax
 --  (Op, AssocType(FA, LA, RA, NA), Domain, arity, prec, noOp, opText, assoc, evalOp)
@@ -225,7 +226,10 @@ collectVars1 = Data.List.nub . helper
 -- Можно использовать функции из Data.List для поиска в списке.
 
 varsToInt :: Eq a => [a] -> Formula a -> Formula Int
-varsToInt = undefined
+varsToInt vars (V a) = V $ fromMaybe e $ elemIndex a vars
+  where
+    e = error "varsToInt: Variable occurs in the formula but not in the list"
+varsToInt vars (C op args) = C op $ map (varsToInt vars) args
 
 -- Задание 8. Напишите функцию compileFormula с аргументом f :: Formula a.
 -- Пусть vars есть список всех переменных f без повторений. Тогда

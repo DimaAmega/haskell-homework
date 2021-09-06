@@ -59,6 +59,9 @@ form2 :: Formula Var
 form2 = C Iff [C Xor [C And [V (Var 'x'), V (Var 'y')], C Neg [V (Var 'z')]],
                C Or [V (Var 'x'), V (Var 'z')]]
 
+form3 :: Formula Var
+form3 = C And [V (Var 'x'), C Or [V (Var 'y'), V (Var 'z')]]
+
 -- Задание 1. Напишите функцию correctArity, которая проверяет, что
 -- арность каждого оператора, объявленная в модуле BooleanSyntax,
 -- совпадает с действительным количеством его аргументов в формуле.

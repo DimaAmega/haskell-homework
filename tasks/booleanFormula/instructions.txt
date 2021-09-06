@@ -1,2 +1,2 @@
-fullParen form1 ""
-showFormula noOp True form1 ""
+form1
+form2

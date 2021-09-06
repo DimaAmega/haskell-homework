@@ -135,15 +135,24 @@ fullParen _ = arityError
 
 showFormula :: Show a => Op -> Bool -> Formula a -> ShowS
 showFormula opExt isLeft (V a) = shows a
-showFormula opExt isLeft (C opInt [arg]) = opText opInt . showFormula opInt True arg
-showFormula opExt isLeft (C opInt [left, right]) = 
-  showFormula opInt True left . opText opInt . showFormula opInt False right
+showFormula opExt isLeft (C opInt [arg]) = opText opInt . showFormula opInt False arg
+showFormula opExt isLeft (C opInt [left, right])
+  | condOne || condTwo = wrapOnQuotes formulaShows
+  | otherwise = formulaShows
+  where
+    raLaAssoc = if isLeft then RA else LA
+    condOne = prec opExt > prec opInt
+    condTwo = (prec opExt == prec opInt) && (condTwoA || condTwoB)
+    condTwoA = opExt /= opInt
+    condTwoB = opExt == opInt && (assoc opExt == raLaAssoc || assoc opExt == NA)
+    formulaShows = showFormula opInt True left . opText opInt . showFormula opInt False right
+
 -- После написания fullParen или showFormula раскоментируйте соответствующий
 -- вариант объявления членства типа Formula в классе Show
 
 instance Show a => Show (Formula a) where
- show f = fullParen f ""
-  -- show f = showFormula noOp True f ""
+--  show f = fullParen f ""
+  show f = showFormula noOp True f ""
 
 -- Например, примеры формул form1 и form2 выше должны печататься так,
 -- как они записаны в комментариях перед определением.

@@ -265,7 +265,11 @@ allEnvs n = sequence $ take n $ repeat domain
 -- логики это последний столбец таблицы истинности.
 
 formulaValues :: Eq a => Formula a -> [Domain]
-formulaValues = undefined
+formulaValues f = helper $ compileFormula f
+  where
+    helper (nVars, fInt) = map evalByEnv $ allEnvs nVars
+      where
+        evalByEnv = \e -> eval e fInt
 
 -- Задание 12. Напишите функцию isConstant c f, которая определяет, является
 -- ли формула f константой, принимающей значение c на всех окружениях

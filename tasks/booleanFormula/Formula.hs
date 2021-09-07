@@ -236,8 +236,9 @@ varsToInt vars (V a) = V $ fromMaybe e $ elemIndex a vars
 -- compileFormula возвращает пару (length vars, varsToInt vars f).
 
 compileFormula :: Eq a => Formula a -> (Int, Formula Int)
-compileFormula = undefined
-
+compileFormula f = (length vars, varsToInt vars f)
+  where
+    vars = collectVars1 f
 -------------------------------------------------
 -- 5. Значения формулы на всевозможных окружениях
 -------------------------------------------------
@@ -249,7 +250,7 @@ compileFormula = undefined
 -- Enum и Bounded в Prelude.
 
 domain :: [Domain]
-domain = undefined
+domain = [minBound..maxBound]
 
 -- Задание 10. Напишите функцию allEnvs, которая принимает число n
 -- и возвращает список всех окружений длины n в лексикографическом

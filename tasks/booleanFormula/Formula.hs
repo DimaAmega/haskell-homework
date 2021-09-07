@@ -275,8 +275,12 @@ formulaValues f = helper $ compileFormula f
 -- ли формула f константой, принимающей значение c на всех окружениях
 
 isConstant :: Eq a => Domain -> Formula a -> Bool
-isConstant = undefined
+isConstant c f = allEqualC $ formulaValues f
+  where
+    allEqualC xs = and $ map (== c) xs
 
+form5 :: Formula Var
+form5 = C Or [V (Var 'x'), C Neg [V (Var 'x')]]
 -------------------------------------------------
 -- 6. Варианты collectVars
 -------------------------------------------------

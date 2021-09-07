@@ -6,3 +6,4 @@ collectVars1 form3
 varsToInt [Var 'x', Var 'y', Var 'z'] form2
 allEnvs 3
 formulaValues form3
+isConstant True form5

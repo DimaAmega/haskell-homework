@@ -258,7 +258,7 @@ domain = [minBound..maxBound]
 -- domain.
 
 allEnvs :: Int -> [Environment]
-allEnvs = undefined
+allEnvs n = sequence $ take n $ repeat domain
 
 -- Задание 11. Напишите функцию formulaValues, которая возвращает
 -- значения формулы на всех наборах аргументов. В случае двузначной

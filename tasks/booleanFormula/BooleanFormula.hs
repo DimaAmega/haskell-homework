@@ -35,7 +35,10 @@ import Data.List
 -- то же самое, что принимать False на всех аргументах.
 
 preservesFalse :: Eq a => Formula a -> Bool
-preservesFalse = undefined
+preservesFalse f = not $ eval allFalse fInt
+  where
+    allFalse = replicate varsCount False
+    (varsCount, fInt) = compileFormula f
 
 -- Задание 2. Напишите функцию, которая возвращает True тогда и только
 -- тогда, когда булева функция, определяемая формулой-аргументом,
@@ -43,7 +46,10 @@ preservesFalse = undefined
 -- то же самое, что принимать True на всех аргументах.
 
 preservesTrue :: Eq a => Formula a -> Bool
-preservesTrue = undefined
+preservesTrue f = eval allTrue fInt
+  where
+    allTrue = replicate varsCount True
+    (varsCount, fInt) = compileFormula f
 
 -- Задание 3. Напишите функцию, которая возвращает True тогда и только
 -- тогда, когда булева функция, определяемая формулой-аргументом,

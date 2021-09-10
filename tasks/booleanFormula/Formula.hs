@@ -291,8 +291,10 @@ form5 = C Or [V (Var 'x'), C Neg [V (Var 'x')]]
 -- использовать функции return и >>=.
 
 collectVars2 :: Eq a => Formula a -> [a]
-collectVars2 (V a) = return a
-collectVars2 (C _ args) = args >>= collectVars2
+collectVars2 = Data.List.nub . helper
+  where
+    helper (V a) = return a
+    helper (C _ args) = args >>= helper
 
 -- Задание 14. Разностные списки описаны в лекции 8. Напишите функцию
 -- collectVars3, аналогичную collectVars1, но использующую разностные

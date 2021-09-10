@@ -1,3 +1,0 @@
-hello "World"
-"Give me 10 natural numbers"
-take 10 naturals

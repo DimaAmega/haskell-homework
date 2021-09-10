@@ -213,7 +213,7 @@ form4 = C And [V 0, C Or [V 1, V 2]]
 -- не более одного раза. Можно использовать функцию nub из Data.List.
 
 collectVars1 :: Eq a => Formula a -> [a]
-collectVars1 = Data.List.nub . helper
+collectVars1 = nub . helper
   where
     helper (V a) = [a]
     helper (C _ args) = foldl (++) [] $ map helper args
@@ -291,7 +291,7 @@ form5 = C Or [V (Var 'x'), C Neg [V (Var 'x')]]
 -- использовать функции return и >>=.
 
 collectVars2 :: Eq a => Formula a -> [a]
-collectVars2 = Data.List.nub . helper
+collectVars2 = nub . helper
   where
     helper (V a) = return a
     helper (C _ args) = args >>= helper
@@ -301,7 +301,10 @@ collectVars2 = Data.List.nub . helper
 -- списки.
 
 collectVars3 :: Eq a => Formula a -> [a]
-collectVars3 = undefined
+collectVars3 f = nub . helper f $ []
+  where
+    helper (V a) = ([a] ++)
+    helper (C _ args) = foldl (.) ([] ++) $ map helper args
 
 -- Задание 15. Сделайте конструктор типов Formula членом класса Foldable,
 -- определив функцию foldMap.

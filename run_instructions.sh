@@ -14,7 +14,7 @@ if [ -f $2 ]; then
     cat $2 | ghci $3 -fno-show-loaded-modules | sed \
     -e '/Ok, [A-Za-z0-9]* module\(s*\) loaded./,$!d' \
     -e '/Ok, [A-Za-z0-9]* module\(s*\) loaded./d' \
-    -e 's/*[A-Z][a-z0-9]*> *//' \
+    -e 's/*[A-Z][A-Za-z0-9]*> *//' \
     -e '$ d'
     exit 0
 fi

@@ -1,0 +1,3 @@
+[submodule "haskell-repl"]
+	path = haskell-repl
+	url = https://github.com/DimaAmega/haskell-repl.git

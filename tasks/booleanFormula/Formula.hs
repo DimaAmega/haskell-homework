@@ -304,7 +304,7 @@ collectVars3 :: Eq a => Formula a -> [a]
 collectVars3 f = nub . helper f $ []
   where
     helper (V a) = ([a] ++)
-    helper (C _ args) = foldl (.) ([] ++) $ map helper args
+    helper (C _ args) = foldl1 (.) $ map helper args
 
 -- Задание 15. Сделайте конструктор типов Formula членом класса Foldable,
 -- определив функцию foldMap.

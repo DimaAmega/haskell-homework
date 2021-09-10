@@ -3,6 +3,7 @@ form2
 form3
 eval [True, False, True] form4
 collectVars1 form3
+collectVars2 form3
 varsToInt [Var 'x', Var 'y', Var 'z'] form2
 allEnvs 3
 formulaValues form3

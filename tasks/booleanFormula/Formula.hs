@@ -310,11 +310,13 @@ collectVars3 f = nub . helper f $ []
 -- определив функцию foldMap.
 
 instance Foldable Formula where
-  foldMap = undefined
+  foldMap f (V a) = f a
+  foldMap f (C _ [arg]) = foldMap f arg
+  foldMap f (C _ [left, right]) = foldMap f left <> foldMap f right
 
 -- Задание 16. Напишите функцию collectVars4, аналогичную collectVars1,
 -- которая явно не использует рекурсию, а вместо этого использует
 -- foldMap с моноидом эндоморфизмов на типе списков переменных.
 
 collectVars4 :: Eq a => Formula a -> [a]
-collectVars4 = undefined
+collectVars4 = nub . foldMap (: [])

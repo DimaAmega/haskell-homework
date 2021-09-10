@@ -12,3 +12,4 @@ isConstant True form5
 preservesFalse form1
 preservesTrue form1
 selfDual form1
+monotone form3

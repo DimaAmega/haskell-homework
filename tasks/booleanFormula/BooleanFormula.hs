@@ -65,7 +65,9 @@ selfDual f = outputs == (map not $ reverse outputs)
 -- монотонна.
 
 monotone :: Eq a => Formula a -> Bool
-monotone = undefined
+monotone f = and $ zipWith (<=) outputs $ tail outputs
+  where
+    outputs = formulaValues f
 
 -- Задание 5. Это задание является необязательным. Напишите функцию,
 -- которая возвращает True тогда и только тогда, когда булева функция,

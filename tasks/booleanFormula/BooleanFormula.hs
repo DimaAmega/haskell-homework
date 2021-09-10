@@ -56,7 +56,9 @@ preservesTrue f = eval allTrue fInt
 -- самодвойственна.
 
 selfDual :: Eq a => Formula a -> Bool
-selfDual = undefined
+selfDual f = outputs == (map not $ reverse outputs)
+  where
+    outputs = formulaValues f
 
 -- Задание 4. Напишите функцию, которая возвращает True тогда и только
 -- тогда, когда булева функция, определяемая формулой-аргументом,

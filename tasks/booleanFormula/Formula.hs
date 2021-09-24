@@ -2,6 +2,7 @@ module Formula where
 
 import Data.List
 import Data.Maybe
+import Data.Monoid
 import Data.Semigroup
 import BooleanSyntax
 --  (Op, AssocType(FA, LA, RA, NA), Domain, arity, prec, noOp, opText, assoc, evalOp)
@@ -189,7 +190,7 @@ lookupVar e index = e !! index
 -- V a | C Op [Formula a]
 eval :: Environment -> Formula Int -> Domain
 eval e (V index) = lookupVar e index
-eval e (C op args) = evalOp op $ map (\arg -> eval e arg) args
+eval e (C op args) = evalOp op $ map (eval e) args
 
 form4 :: Formula Int
 form4 = C And [V 0, C Or [V 1, V 2]]
@@ -216,7 +217,7 @@ collectVars1 :: Eq a => Formula a -> [a]
 collectVars1 = nub . helper
   where
     helper (V a) = [a]
-    helper (C _ args) = foldl (++) [] $ map helper args
+    helper (C _ args) = concatMap helper args
 
 -- Задание 7. Напишите функцию varsToInt, которая принимает список
 -- переменных и формулу и возвращает формулу типа Formula Int, где
@@ -258,7 +259,7 @@ domain = [minBound..maxBound]
 -- domain.
 
 allEnvs :: Int -> [Environment]
-allEnvs n = sequence $ take n $ repeat domain
+allEnvs n = sequence $ replicate n domain
 
 -- Задание 11. Напишите функцию formulaValues, которая возвращает
 -- значения формулы на всех наборах аргументов. В случае двузначной
@@ -269,7 +270,7 @@ formulaValues f = helper $ compileFormula f
   where
     helper (nVars, fInt) = map evalByEnv $ allEnvs nVars
       where
-        evalByEnv = \e -> eval e fInt
+        evalByEnv = (`eval` fInt)
 
 -- Задание 12. Напишите функцию isConstant c f, которая определяет, является
 -- ли формула f константой, принимающей значение c на всех окружениях
@@ -277,7 +278,7 @@ formulaValues f = helper $ compileFormula f
 isConstant :: Eq a => Domain -> Formula a -> Bool
 isConstant c f = allEqualC $ formulaValues f
   where
-    allEqualC xs = and $ map (== c) xs
+    allEqualC xs = all (== c) xs
 
 form5 :: Formula Var
 form5 = C Or [V (Var 'x'), C Neg [V (Var 'x')]]
@@ -311,12 +312,11 @@ collectVars3 f = nub . helper f $ []
 
 instance Foldable Formula where
   foldMap f (V a) = f a
-  foldMap f (C _ [arg]) = foldMap f arg
-  foldMap f (C _ [left, right]) = foldMap f left <> foldMap f right
+  foldMap f (C _ args) = foldl1 (<>) $ map (foldMap f) args
 
 -- Задание 16. Напишите функцию collectVars4, аналогичную collectVars1,
 -- которая явно не использует рекурсию, а вместо этого использует
 -- foldMap с моноидом эндоморфизмов на типе списков переменных.
 
 collectVars4 :: Eq a => Formula a -> [a]
-collectVars4 = nub . foldMap (: [])
+collectVars4 f = nub $ appEndo (foldMap (\a -> Endo ([a] ++)) f) []

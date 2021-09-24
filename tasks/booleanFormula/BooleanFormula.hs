@@ -65,8 +65,14 @@ selfDual f = outputs == (map not $ reverse outputs)
 -- монотонна.
 
 monotone :: Eq a => Formula a -> Bool
-monotone f = and $ zipWith (<=) outputs $ tail outputs
+monotone f = check outputs
   where
+    check [] = True
+    check [one] = True
+    check arr = checkTwoArrays $ splitByTwo arr
+    checkTwoArrays (a,b) = a `isMore` b && check a && check b
+    isMore a b = and $ zipWith (<=) a b
+    splitByTwo l = splitAt ((length l + 1) `div` 2) l
     outputs = formulaValues f
 
 -- Задание 5. Это задание является необязательным. Напишите функцию,

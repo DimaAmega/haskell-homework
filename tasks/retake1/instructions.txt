@@ -1,0 +1,3 @@
+abbrev ["Sergey", "Michail", "Rudold"]
+abbrev ["Rudold"]
+foldMapList (\a -> [1,a]) [1,2,3]

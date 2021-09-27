@@ -116,12 +116,12 @@ abbrev :: String -> String
 abbrev input = helper . words $ input
   where
     helper :: [String] -> String
-    helper list = foldl (++) "" (makeWordsShort firstWords) ++ lastWord
+    helper list = concat (makeWordsShort firstWords) ++ lastWord
       where
         lastWord = last list
         firstWords = init list
         makeWordsShort :: [String] -> [String]
-        makeWordsShort = map (\word -> [head word] ++ ".")
+        makeWordsShort = map (\w -> head w : ".")
 
 -- 3. См. файл midterm-problem3.pdf в source.unn.ru.
 

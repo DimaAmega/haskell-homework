@@ -175,6 +175,60 @@ f2 = appEndo . mconcat . map (Endo . showString)
 -- числе на типе функций (a -> b) и типе эндоморфизмов (Endo a),
 -- находятся в модуле Data.Semigroup.
 
+-- Результаты выполнения функций
+-- СЛУЧАЙ f1
+-- В данном случае используется следующая реализация 
+-- (см https://hackage.haskell.org/package/base-4.15.0.0/docs/src/GHC-Base.html#Semigroup)
+-- instance Semigroup b => Semigroup (a -> b) where
+--         f <> g = \x -> f x <> g x
+--         stimes n f e = stimes n (f e)
+--
+-- рассмотрим пример вычисления f1 l "|" == "ab|cd|ef|"
+-- рассмотрим аппликацию f1 ["ab", "cd", "ef"]
+-- Будем ее редуцировать:
+-- mconcat (map showString ["ab", "cd", "ef"])
+-- mconcat [Shows "ab", Shows "cd", Shows "ef"]
+-- foldr (<>) mempty [Shows "ab", Shows "cd", Shows "ef"]
+-- Shows "ab" <> (Shows "cd" <> (Shows "ef" <> mempty))
+-- Shows "ab" <> (Shows "cd" <> Shows "ef") 
+-- Shows "ab" <> \x -> Shows "cd" x <> Shows "ef" x
+-- \y -> Shows "ab" y <> (\x -> Shows "cd" x <> Shows "ef" x) y
+-- \y -> Shows "ab" y <> Shows "cd" y <> Shows "ef" y
+--
+-- Теперь применим к этому терму "|"
+-- (\y -> Shows "ab" y <> Shows "cd" y <> Shows "ef" y) "|"
+-- Shows "ab" "|" <> Shows "cd" "|" <> Shows "ef" "|"
+-- Shows "ab" "|" <> Shows "cd" "|" <> Shows "ef" "|"
+-- "ab|" <> "cd|" <> "ef|"
+-- "ab|cd|ef|"
+-- Теперь уже становится очевидно, что f1 принимает список строк 
+-- и еще одну строку A. К каждой строке из списка 
+-- конкатенирует строку A и полученные строки тоже конкатенирует
+--
+-- СЛУЧАЙ f2
+-- в данном случае будет использоваться следующая реализация
+-- instance Semigroup (Endo a) where
+--   Endo f <> Endo g = Endo (f . g)
+-- рассмотрим пример вычисления f2 l "|" == "abcdef|"
+-- рассмотрим аппликацию f2 ["ab", "cd", "ef"]
+-- Будем ее редуцировать:
+-- appEndo $ mconcat $ map (Endo . showString) ["ab", "cd", "ef"]
+-- appEndo $ mconcat [Endo (Shows "ab"), Endo (Shows "cd"), Endo (Shows "ef")]
+-- appEndo $ Endo (Shows "ab") <> Endo (Shows "cd") <> Endo (Shows "ef")
+-- appEndo $ Endo (Shows "ab" . Shows "cd" . Shows "ef")
+-- Теперь применим к этому терму "|"
+-- appEndo Endo (Shows "ab" . Shows "cd" . Shows "ef") "|"
+-- Очевидно получаем
+-- "abcdef|"
+-- Теперь уже становится очевидно, что f2 принимает список строк
+-- и еще одну строку A. Конкатенирует все строки списка и в конце
+-- конкатенирует к полученному результату A.
+--
+-- Разница происходит именно от того, что mconcat работает с разными 
+-- сущностями, в первом случае mconcat применяется к [Shows]
+-- а во втором к [Endo]. Разумеется реализации <> ведут себя по разному
+-- в случае моноида эндоморфизнов и разностных списков. (реализации были приведены
+-- в начале каждого рассматриваемого случая)
 -- 6. Напишите функцию
 
 minMax :: [Int] -> (Int, Int)

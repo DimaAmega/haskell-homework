@@ -1,3 +1,9 @@
 abbrev ["Sergey", "Michail", "Rudold"]
 abbrev ["Rudold"]
 foldMapList (\a -> [1,a]) [1,2,3]
+"************************************"
+"f1 is"
+f1 l "|"
+"f2 is"
+f2 l "|"
+

@@ -70,8 +70,8 @@ monotone f = check outputs
     check [] = True
     check [one] = True
     check arr = checkTwoArrays $ splitByTwo arr
-    checkTwoArrays (a,b) = a `isMore` b && check a && check b
-    isMore a b = and $ zipWith (<=) a b
+    checkTwoArrays (a,b) = a `isLess` b && check a && check b
+    isLess a b = and $ zipWith (<=) a b
     splitByTwo l = splitAt ((length l + 1) `div` 2) l
     outputs = formulaValues f
 
